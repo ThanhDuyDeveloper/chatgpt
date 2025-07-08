@@ -9,6 +9,10 @@ Bot Messenger được tạo bằng NodeJS và chạy trên Replit.
 - ✅ Xử lý postback
 - ✅ Hiển thị thời gian
 - ✅ Menu tương tác
+- ✅ **Console startup đẹp với 7 màu sắc**
+- ✅ **ASCII Art banner khi khởi động**
+- ✅ **Log messages có màu sắc chuyên nghiệp**
+- ✅ **Loading animation khi startup**
 - ✅ Dễ dàng mở rộng
 
 ## 📋 Hướng dẫn Setup
@@ -48,6 +52,29 @@ PORT=3000
 3. Gửi "menu" để hiển thị menu tương tác
 4. Gửi "thời gian" để xem thời gian hiện tại
 
+## 🎨 Console Features
+
+Bot có console startup cực kỳ đẹp mắt với:
+
+- 🌈 **ASCII Art Banner** - Tên bot hiển thị bằng ASCII art nhiều màu
+- ⚡ **Loading Animation** - Hiệu ứng loading spinner khi khởi động
+- 📊 **System Information** - Hiển thị đầy đủ thông tin hệ thống
+- 🔗 **Quick Links** - Các đường dẫn quan trọng
+- ⚙️ **Environment Status** - Kiểm tra cấu hình
+- 📝 **Commands List** - Danh sách lệnh có sẵn
+- 🎯 **Colored Logs** - Log messages theo từng loại với màu sắc riêng:
+  - 📘 **INFO** - Thông tin chung (xanh dương)
+  - ✅ **SUCCESS** - Thành công (xanh lá)
+  - ⚠️ **WARNING** - Cảnh báo (vàng)
+  - ❌ **ERROR** - Lỗi (đỏ)
+  - 🪝 **WEBHOOK** - Sự kiện webhook (tím)
+  - 💬 **MESSAGE** - Tin nhắn từ user (cyan)
+
+### Demo Console:
+```bash
+npm run demo  # Xem demo console đẹp
+```
+
 ## 📁 Cấu trúc Project
 
 ```
@@ -55,6 +82,8 @@ PORT=3000
 ├── package.json      # Dependencies và scripts
 ├── .env.example      # Mẫu environment variables
 ├── .replit          # Cấu hình Replit
+├── utils/
+│   └── console.js    # Console đẹp và log functions
 └── README.md        # Hướng dẫn (file này)
 ```
 

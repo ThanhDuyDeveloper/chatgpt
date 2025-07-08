@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
+const { startupConsole, logMessage } = require('./utils/console');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,9 +23,10 @@ app.get('/webhook', (req, res) => {
 
   if (mode && token) {
     if (mode === 'subscribe' && token === VERIFY_TOKEN) {
-      console.log('WEBHOOK_VERIFIED');
+      logMessage('success', 'Webhook đã được xác thực thành công!');
       res.status(200).send(challenge);
     } else {
+      logMessage('error', 'Token xác thực webhook không đúng!');
       res.sendStatus(403);
     }
   }
@@ -37,7 +39,7 @@ app.post('/webhook', (req, res) => {
   if (body.object === 'page') {
     body.entry.forEach(function(entry) {
       const webhookEvent = entry.messaging[0];
-      console.log('Received webhook event:', webhookEvent);
+      logMessage('webhook', `Nhận được sự kiện từ User ID: ${webhookEvent.sender.id}`);
 
       const senderPsid = webhookEvent.sender.id;
 
@@ -50,6 +52,7 @@ app.post('/webhook', (req, res) => {
 
     res.status(200).send('EVENT_RECEIVED');
   } else {
+    logMessage('warning', 'Nhận được request không phải từ Facebook Page');
     res.sendStatus(404);
   }
 });
@@ -60,6 +63,7 @@ function handleMessage(senderPsid, receivedMessage) {
 
   if (receivedMessage.text) {
     const messageText = receivedMessage.text.toLowerCase();
+    logMessage('message', `Nhận tin nhắn: "${receivedMessage.text}" từ User ID: ${senderPsid}`);
 
     // Các phản hồi tự động
     if (messageText.includes('hello') || messageText.includes('hi') || messageText.includes('xin chào')) {
@@ -121,6 +125,7 @@ function handleMessage(senderPsid, receivedMessage) {
 function handlePostback(senderPsid, receivedPostback) {
   let response;
   const payload = receivedPostback.payload;
+  logMessage('message', `Nhận postback: "${payload}" từ User ID: ${senderPsid}`);
 
   switch(payload) {
     case 'INFO':
@@ -153,10 +158,10 @@ function callSendAPI(senderPsid, response) {
 
   axios.post(`https://graph.facebook.com/v18.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, requestBody)
     .then(response => {
-      console.log('Message sent successfully!');
+      logMessage('success', `Đã gửi tin nhắn thành công tới User ID: ${senderPsid}`);
     })
     .catch(error => {
-      console.error('Error sending message:', error.response?.data || error.message);
+      logMessage('error', `Lỗi khi gửi tin nhắn: ${error.response?.data?.error?.message || error.message}`);
     });
 }
 
@@ -178,9 +183,15 @@ app.get('/', (req, res) => {
   `);
 });
 
-// Khởi động server
-app.listen(PORT, () => {
-  console.log(`🚀 Bot Messenger đang chạy trên port ${PORT}`);
-  console.log(`🔗 Webhook URL: http://localhost:${PORT}/webhook`);
-  console.log(`⚠️  Hãy đảm bảo đã cấu hình VERIFY_TOKEN và PAGE_ACCESS_TOKEN!`);
+// Khởi động server với console đẹp
+app.listen(PORT, async () => {
+  await startupConsole(PORT);
+  
+  // Log thêm thông tin sau khi startup
+  logMessage('info', 'Server đã khởi động và đang lắng nghe các webhook...');
+  
+  if (process.env.VERIFY_TOKEN === 'your_verify_token_here' || 
+      process.env.PAGE_ACCESS_TOKEN === 'your_page_access_token_here') {
+    logMessage('warning', 'Vui lòng cấu hình VERIFY_TOKEN và PAGE_ACCESS_TOKEN trong file .env');
+  }
 });
